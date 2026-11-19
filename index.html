@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbor, a living map of your data</title>
+<meta name="description" content="Arbor maps lineage, freshness and spend across your warehouse, dbt project and orchestrator, so a stalled table is visible before the dashboard lies.">
+<meta name="theme-color" content="#F2EDE7">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%233B1017'/%3E%3Cg fill='none' stroke='%23F1531F' stroke-width='1.9' stroke-linecap='round'%3E%3Cpath d='M12 19V9'/%3E%3Cpath d='M12 12.5c0-2.4 1.7-4 4.2-4'/%3E%3Cpath d='M12 15c0-2-1.6-3.6-4-3.6'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/site.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="announce">
+  <div class="container announce-inner">
+    <p>Drift alerts land in Slack first.</p>
+    <a href="#lineage">See how</a>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="container masthead-inner">
+    <a class="brand" href="#main" aria-label="Arbor, home">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+        <path d="M12 21V9"></path>
+        <path d="M12 12.8c0-2.5 1.8-4.2 4.4-4.2"></path>
+        <path d="M12 15.6c0-2.1-1.6-3.7-4.1-3.7"></path>
+        <circle cx="17.4" cy="7.6" r="1.5" fill="currentColor" stroke="none"></circle>
+        <circle cx="6.9" cy="10.9" r="1.5" fill="currentColor" stroke="none"></circle>
+        <circle cx="12" cy="21" r="1.5" fill="currentColor" stroke="none"></circle>
+      </svg>
+      <span class="brand-name">arbor</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="#lineage">Lineage</a>
+      <a href="#board">Owners</a>
+      <a href="#spend">Spend</a>
+      <a href="#setup">Setup</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-signin" href="#ask">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="#setup">Start free</a>
+    </div>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-panel">Menu</button>
+
+    <div class="nav-panel" id="nav-panel" hidden>
+      <a href="#lineage">Lineage</a>
+      <a href="#board">Owners</a>
+      <a href="#spend">Spend</a>
+      <a href="#setup">Setup</a>
+      <a href="#ask">Ask the map</a>
+      <a class="btn btn-primary" href="#setup">Start free</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title">Know your data before it breaks.</h1>
+        <p class="lede">Lineage, freshness and spend for every pipeline your team owns.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="#setup">Connect a warehouse</a>
+          <a class="link" href="#ask">Ask the map a question</a>
+        </div>
+        <p class="hero-note">Read-only role. No row data.</p>
+      </div>
+
+      <div class="hero-board">
+        <div class="board" aria-label="Sample workspace, the orders pipeline">
+          <div class="board-top">
+            <div>
+              <p class="board-name">orders</p>
+              <p class="board-sub">warehouse.prod</p>
+            </div>
+            <p class="chip chip-warn">Stale 38 min</p>
+          </div>
+
+          <div class="board-stages">
+            <button class="stage" type="button" data-state="late" aria-pressed="true" data-detail="The orders extract missed its 04:12 window. The dashboard still shows yesterday’s revenue.">
+              <span class="stage-mark" aria-hidden="true"></span>
+              <span class="stage-name">postgres.orders</span>
+              <span class="stage-meta">38 min late</span>
+            </button>
+            <button class="stage" type="button" data-state="blocked" aria-pressed="false" data-detail="stg_orders has no new rows since 04:12. Its freshness target is 30 minutes.">
+              <span class="stage-mark" aria-hidden="true"></span>
+              <span class="stage-name">stg_orders</span>
+              <span class="stage-meta">blocked</span>
+            </button>
+            <button class="stage" type="button" data-state="blocked" aria-pressed="false" data-detail="fct_orders is waiting on stg_orders. The 05:00 run has not started.">
+              <span class="stage-mark" aria-hidden="true"></span>
+              <span class="stage-name">fct_orders</span>
+              <span class="stage-meta">blocked</span>
+            </button>
+            <button class="stage" type="button" aria-pressed="false" data-detail="The dashboard is serving yesterday’s revenue. No alert has fired yet.">
+              <span class="stage-mark" aria-hidden="true"></span>
+              <span class="stage-name">exec_dashboard</span>
+              <span class="stage-meta">serving yesterday</span>
+            </button>
+          </div>
+
+          <figure class="board-chart">
+            <svg viewBox="0 0 320 92" role="img" aria-label="Rows landed per minute, rising until the extract stops at 03:58.">
+              <path d="M0 70 L31 64 L62 68 L93 54 L124 58 L155 46 L186 50 L217 36 L248 40 L248 92 L0 92 Z" fill="var(--color-accent-soft)"></path>
+              <path d="M0 70 L31 64 L62 68 L93 54 L124 58 L155 46 L186 50 L217 36 L248 40" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+              <path d="M248 40 L320 40" fill="none" stroke="var(--color-rule)" stroke-width="1.4" stroke-dasharray="3 5"></path>
+              <circle cx="248" cy="40" r="3.4" fill="var(--color-accent)"></circle>
+              <line x1="0" y1="92" x2="320" y2="92" stroke="var(--color-rule)" stroke-width="1"></line>
+            </svg>
+            <figcaption>Rows per minute. Last row at 03:58.</figcaption>
+          </figure>
+
+          <p class="board-detail" aria-live="polite">The orders extract missed its 04:12 window. The dashboard still shows yesterday’s revenue.</p>
+
+          <div class="board-foot">
+            <span>Sample workspace</span>
+            <a class="link" href="#lineage">Open the map</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="lineage" aria-labelledby="lineage-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2 id="lineage-title">Every column, from source to dashboard.</h2>
+        <p class="body">Arbor reads metadata from your warehouse, dbt project and orchestrator, then draws the path a column takes. When a hop stalls, you see the hop.</p>
+      </div>
+
+      <div class="map-wrap reveal">
+        <svg class="map" viewBox="0 0 1000 360" role="group" aria-label="Column lineage for the orders pipeline. Hover or focus a node to trace its upstream and downstream.">
+          <g class="map-edges">
+            <path class="map-edge" data-from="orders" data-to="stg_orders" d="M164 68 C194 68 194 68 224 68"></path>
+            <path class="map-edge" data-from="charges" data-to="stg_charges" d="M164 176 C194 176 194 176 224 176"></path>
+            <path class="map-edge" data-from="events" data-to="stg_events" d="M164 284 C194 284 194 284 224 284"></path>
+            <path class="map-edge" data-from="stg_orders" data-to="fct_orders" d="M368 68 C398 68 398 120 428 120"></path>
+            <path class="map-edge" data-from="stg_charges" data-to="fct_orders" d="M368 176 C398 176 398 120 428 120"></path>
+            <path class="map-edge" data-from="stg_events" data-to="dim_customers" d="M368 284 C398 284 398 260 428 260"></path>
+            <path class="map-edge" data-from="fct_orders" data-to="rev_daily" d="M572 120 C602 120 602 96 632 96"></path>
+            <path class="map-edge" data-from="fct_orders" data-to="churn_monthly" d="M572 120 C602 120 602 264 632 264"></path>
+            <path class="map-edge" data-from="dim_customers" data-to="churn_monthly" d="M572 260 C602 260 602 264 632 264"></path>
+            <path class="map-edge" data-from="rev_daily" data-to="exec_dashboard" d="M776 96 C806 96 806 96 836 96"></path>
+            <path class="map-edge" data-from="rev_daily" data-to="rev_alerts" d="M776 96 C806 96 806 264 836 264"></path>
+            <path class="map-edge" data-from="churn_monthly" data-to="exec_dashboard" d="M776 264 C806 264 806 96 836 96"></path>
+          </g>
+
+          <g class="map-node" tabindex="0" data-node="orders" aria-label="postgres.orders, source table">
+            <rect x="20" y="48" width="144" height="40" rx="12"></rect><text x="34" y="73">postgres.orders</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="charges" aria-label="stripe.charges, source table">
+            <rect x="20" y="156" width="144" height="40" rx="12"></rect><text x="34" y="181">stripe.charges</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="events" aria-label="s3.events, source table">
+            <rect x="20" y="264" width="144" height="40" rx="12"></rect><text x="34" y="289">s3.events</text>
+          </g>
+
+          <g class="map-node" tabindex="0" data-node="stg_orders" aria-label="stg_orders, staging model">
+            <rect x="224" y="48" width="144" height="40" rx="12"></rect><text x="238" y="73">stg_orders</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="stg_charges" aria-label="stg_charges, staging model">
+            <rect x="224" y="156" width="144" height="40" rx="12"></rect><text x="238" y="181">stg_charges</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="stg_events" aria-label="stg_events, staging model">
+            <rect x="224" y="264" width="144" height="40" rx="12"></rect><text x="238" y="289">stg_events</text>
+          </g>
+
+          <g class="map-node is-key" tabindex="0" data-node="fct_orders" aria-label="fct_orders, model, used by two marts">
+            <rect x="428" y="100" width="144" height="40" rx="12"></rect><text x="442" y="125">fct_orders</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="dim_customers" aria-label="dim_customers, model">
+            <rect x="428" y="240" width="144" height="40" rx="12"></rect><text x="442" y="265">dim_customers</text>
+          </g>
+
+          <g class="map-node" tabindex="0" data-node="rev_daily" aria-label="rev_daily, mart">
+            <rect x="632" y="76" width="144" height="40" rx="12"></rect><text x="646" y="101">rev_daily</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="churn_monthly" aria-label="churn_monthly, mart">
+            <rect x="632" y="244" width="144" height="40" rx="12"></rect><text x="646" y="269">churn_monthly</text>
+          </g>
+
+          <g class="map-node" tabindex="0" data-node="exec_dashboard" aria-label="exec_dashboard, dashboard">
+            <rect x="836" y="76" width="144" height="40" rx="12"></rect><text x="850" y="101">exec_dashboard</text>
+          </g>
+          <g class="map-node" tabindex="0" data-node="rev_alerts" aria-label="rev-alerts, Slack channel">
+            <rect x="836" y="244" width="144" height="40" rx="12"></rect><text x="850" y="269">#rev-alerts</text>
+          </g>
+        </svg>
+
+        <div class="map-list" aria-label="Column lineage, listed by layer">
+          <div class="ml-group">
+            <p class="ml-layer">Sources</p>
+            <ul>
+              <li><span class="ml-name">postgres.orders</span></li>
+              <li><span class="ml-name">stripe.charges</span></li>
+              <li><span class="ml-name">s3.events</span></li>
+            </ul>
+          </div>
+          <div class="ml-group">
+            <p class="ml-layer">Models</p>
+            <ul>
+              <li><span class="ml-name">stg_orders</span></li>
+              <li><span class="ml-name">stg_charges</span></li>
+              <li><span class="ml-name">stg_events</span></li>
+              <li><span class="ml-name">fct_orders</span></li>
+              <li><span class="ml-name">dim_customers</span></li>
+            </ul>
+          </div>
+          <div class="ml-group">
+            <p class="ml-layer">Outputs</p>
+            <ul>
+              <li><span class="ml-name">rev_daily</span></li>
+              <li><span class="ml-name">churn_monthly</span></li>
+              <li><span class="ml-name">exec_dashboard</span></li>
+              <li><span class="ml-name">#rev-alerts</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="map-detail">
+          <p aria-live="polite" data-map-detail><strong>fct_orders</strong> sits at the centre of this map. Five tables feed it and two marts read from it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="board" aria-labelledby="board-title">
+    <div class="container board-grid">
+      <div class="board-copy reveal">
+        <h2 id="board-title">See who owns what, and what is late.</h2>
+        <p class="body">Owners, freshness targets and spend on one board, answered before standup.</p>
+        <a class="link" href="#ask">Ask the map about an owner</a>
+      </div>
+
+      <div class="table-card reveal" style="--i:1">
+        <div class="table-head">
+          <p class="table-title">Ownership</p>
+          <p class="chip">30 day window</p>
+        </div>
+        <table class="data">
+          <caption class="visually-hidden">Sample ownership board for the orders workspace</caption>
+          <thead>
+            <tr>
+              <th scope="col">Dataset</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Freshness</th>
+              <th scope="col">Quality</th>
+              <th scope="col" class="num">Spend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ds" data-label="Dataset">fct_orders</td>
+              <td data-label="Owner">M. Okafor</td>
+              <td data-label="Freshness">6 min</td>
+              <td data-label="Quality">
+                <span class="qbar"><span class="qbar-track"><span class="qbar-fill" style="--v:.98"></span></span>98%</span>
+              </td>
+              <td class="num" data-label="Spend">$1.8k</td>
+            </tr>
+            <tr>
+              <td class="ds" data-label="Dataset">events_raw</td>
+              <td data-label="Owner">A. Haddad</td>
+              <td class="late" data-label="Freshness">38 min late</td>
+              <td data-label="Quality">
+                <span class="qbar"><span class="qbar-track"><span class="qbar-fill" style="--v:.71"></span></span>71%</span>
+              </td>
+              <td class="num" data-label="Spend">$2.4k</td>
+            </tr>
+            <tr>
+              <td class="ds" data-label="Dataset">stg_charges</td>
+              <td data-label="Owner">R. Silva</td>
+              <td data-label="Freshness">42 min</td>
+              <td data-label="Quality">
+                <span class="qbar"><span class="qbar-track"><span class="qbar-fill" style="--v:.94"></span></span>94%</span>
+              </td>
+              <td class="num" data-label="Spend">$620</td>
+            </tr>
+            <tr>
+              <td class="ds" data-label="Dataset">dim_customers</td>
+              <td data-label="Owner">J. Park</td>
+              <td data-label="Freshness">3 h</td>
+              <td data-label="Quality">
+                <span class="qbar"><span class="qbar-track"><span class="qbar-fill" style="--v:.89"></span></span>89%</span>
+              </td>
+              <td class="num" data-label="Spend">$310</td>
+            </tr>
+            <tr>
+              <td class="ds" data-label="Dataset">rev_daily</td>
+              <td data-label="Owner">M. Okafor</td>
+              <td data-label="Freshness">12 min</td>
+              <td data-label="Quality">
+                <span class="qbar"><span class="qbar-track"><span class="qbar-fill" style="--v:.99"></span></span>99%</span>
+              </td>
+              <td class="num" data-label="Spend">$480</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="spend" aria-labelledby="spend-title">
+    <div class="container spend-grid">
+      <div class="spend-bars reveal">
+        <div class="spend-group">
+          <div class="spend-total"><span>Snowflake</span><span>61%</span></div>
+          <div class="spend-total-bar" style="--v:.61"><i></i></div>
+          <div class="spend-row" style="--v:.24"><span class="spend-name">fct_orders</span><span class="track"><i></i></span><span class="spend-val">24%</span></div>
+          <div class="spend-row" style="--v:.18"><span class="spend-name">events_raw</span><span class="track"><i></i></span><span class="spend-val">18%</span></div>
+          <div class="spend-row" style="--v:.11"><span class="spend-name">stg_charges</span><span class="track"><i></i></span><span class="spend-val">11%</span></div>
+          <div class="spend-row" style="--v:.08"><span class="spend-name">other</span><span class="track"><i></i></span><span class="spend-val">8%</span></div>
+        </div>
+        <div class="spend-group">
+          <div class="spend-total"><span>BigQuery</span><span>39%</span></div>
+          <div class="spend-total-bar" style="--v:.39"><i></i></div>
+          <div class="spend-row" style="--v:.16"><span class="spend-name">churn_monthly</span><span class="track"><i></i></span><span class="spend-val">16%</span></div>
+          <div class="spend-row" style="--v:.13"><span class="spend-name">ad_hoc</span><span class="track"><i></i></span><span class="spend-val">13%</span></div>
+          <div class="spend-row" style="--v:.10"><span class="spend-name">other</span><span class="track"><i></i></span><span class="spend-val">10%</span></div>
+        </div>
+        <p class="spend-foot">Priced from the bills you already pay. Sample workspace, last 30 days.</p>
+      </div>
+
+      <div class="spend-copy reveal" style="--i:1">
+        <h2 id="spend-title">Know where every dollar goes.</h2>
+        <p class="body">Cost per warehouse, model and query, joined to the lineage map.</p>
+        <a class="link" href="#ask">Ask what a table cost</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="router" aria-labelledby="router-title">
+    <div class="container">
+      <div class="router-card reveal">
+        <div class="router-head">
+          <h2 id="router-title">Cheapest engine that still meets the clock.</h2>
+          <p class="body">Arbor prices each query against three engines, then routes it inside your latency budget. You keep the SQL.</p>
+          <a class="link" href="#setup">Read how routing works</a>
+        </div>
+
+        <div class="router-visual">
+          <svg class="router-svg" viewBox="0 0 1000 300" role="group" aria-label="One sample query priced against three engines. Select an engine to see its route.">
+            <path class="route" data-engine="snowflake" d="M220 150 C380 150 560 62 760 62"></path>
+            <path class="route is-lit" data-engine="bigquery" d="M220 150 C380 150 560 150 760 150"></path>
+            <path class="route" data-engine="duckdb" d="M220 150 C380 150 560 238 760 238"></path>
+
+            <g class="query">
+              <rect x="20" y="126" width="200" height="48" rx="12"></rect>
+              <text x="34" y="147">SELECT sum(total)</text>
+              <text x="34" y="164">FROM orders</text>
+            </g>
+
+            <g class="engine" role="button" tabindex="0" aria-pressed="false" data-engine="snowflake">
+              <rect x="760" y="30" width="220" height="64" rx="14"></rect>
+              <text x="778" y="55">Snowflake</text>
+              <text x="962" y="55" text-anchor="end">1.9s</text>
+              <text class="engine-cost" x="778" y="76">$0.42 per run</text>
+            </g>
+            <g class="engine" role="button" tabindex="0" aria-pressed="true" data-engine="bigquery">
+              <rect x="760" y="118" width="220" height="64" rx="14"></rect>
+              <text x="778" y="143">BigQuery</text>
+              <text x="962" y="143" text-anchor="end">2.4s</text>
+              <text class="engine-cost" x="778" y="164">$0.11 per run</text>
+            </g>
+            <g class="engine" role="button" tabindex="0" aria-pressed="false" data-engine="duckdb">
+              <rect x="760" y="206" width="220" height="64" rx="14"></rect>
+              <text x="778" y="231">DuckDB</text>
+              <text x="962" y="231" text-anchor="end">11.2s</text>
+              <text class="engine-cost" x="778" y="252">$0.02 per run</text>
+            </g>
+          </svg>
+
+          <div class="router-mobile" role="group" aria-label="Choose an engine for the sample query">
+            <p class="rm-query">SELECT sum(total) FROM orders</p>
+            <button class="rm-engine" type="button" data-engine="snowflake" aria-pressed="false">
+              <span class="rm-name">Snowflake</span>
+              <span class="rm-meta"><span>$0.42</span><span>1.9s</span></span>
+            </button>
+            <button class="rm-engine" type="button" data-engine="bigquery" aria-pressed="true">
+              <span class="rm-name">BigQuery</span>
+              <span class="rm-meta"><span>$0.11</span><span>2.4s</span></span>
+            </button>
+            <button class="rm-engine" type="button" data-engine="duckdb" aria-pressed="false">
+              <span class="rm-name">DuckDB</span>
+              <span class="rm-meta"><span>$0.02</span><span>11.2s</span></span>
+            </button>
+          </div>
+
+          <div class="router-caption">
+            <span>One sample query, priced three ways.</span>
+            <span data-router-note aria-live="polite">BigQuery at $0.11, inside the 3 second budget.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="setup" aria-labelledby="setup-title">
+    <div class="container">
+      <div class="setup-head reveal">
+        <h2 id="setup-title">Two commands, then it stays quiet.</h2>
+        <p class="body">A read-only role, and one command.</p>
+      </div>
+
+      <div class="setup-grid">
+        <div class="terminal reveal">
+          <div class="terminal-bar">
+            <span>arbor init</span>
+            <button class="copy" type="button" data-copy="npx arbor init">Copy</button>
+          </div>
+          <pre><code><span class="t-dim">$</span> npx arbor init
+<span class="t-dim">?</span> warehouse      snowflake://acme/prod
+<span class="t-dim">?</span> role           arbor_reader
+<span class="t-ok">ok</span> collector running in 14s
+
+<span class="t-dim">$</span> arbor status
+orders        <span class="t-hot">stale 38m</span>
+fct_orders    blocked upstream</code></pre>
+        </div>
+
+        <ol class="steps reveal" style="--i:1">
+          <li>
+            <h3>Add the role</h3>
+            <p>Paste a read-only key.</p>
+            <span class="code-chip">arbor_reader</span>
+          </li>
+          <li>
+            <h3>Run the collector</h3>
+            <p>One container, every five minutes.</p>
+            <span class="code-chip">npx arbor collect</span>
+          </li>
+          <li>
+            <h3>Keep your tools</h3>
+            <p>Your dbt project stays as it is.</p>
+            <span class="code-chip">dbt build</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="ask" aria-labelledby="ask-title">
+    <div class="container ask-grid">
+      <div class="ask-copy reveal">
+        <h2 id="ask-title">Ask the map a question.</h2>
+        <p class="body">Answers cite the tables they came from.</p>
+      </div>
+
+      <div class="ask-panel reveal" style="--i:1">
+        <div class="ask-field">
+          <label class="visually-hidden" for="ask-input">Ask about your data</label>
+          <input id="ask-input" type="text" placeholder="Which table is late today?" autocomplete="off">
+          <button class="ask-send" type="button" data-ask aria-label="Ask the map">
+            <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 13V3"></path><path d="M3.5 7.5 8 3l4.5 4.5"></path>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="ask-suggestions">
+          <li><button type="button" data-q="Which table is late today?">Which table is late today?</button></li>
+          <li><button type="button" data-q="Who owns events_raw?">Who owns events_raw?</button></li>
+          <li><button type="button" data-q="What did churn_monthly cost?">What did churn_monthly cost?</button></li>
+        </ul>
+
+        <div class="ask-answer" data-answer hidden>
+          <span class="tag">Sample answer</span>
+          <p data-answer-text></p>
+        </div>
+
+        <p class="ask-caption">Sample answers, running on the sample workspace.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section permissions" id="permissions" aria-labelledby="perm-title">
+    <div class="container">
+      <h2 id="perm-title">Reads metadata. Never your rows.</h2>
+      <p class="body">Column names, types and statistics only.</p>
+
+      <ul class="perm-list reveal">
+        <li>
+          <h3>Read-only role</h3>
+          <p>Metadata views only. No write grants.</p>
+        </li>
+        <li>
+          <h3>No row data</h3>
+          <p>Counts and ranges, computed in place.</p>
+        </li>
+        <li>
+          <h3>Run it where you like</h3>
+          <p>Your VPC, or ours.</p>
+        </li>
+      </ul>
+
+      <a class="btn btn-primary btn-lg" href="#setup">Connect a warehouse</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="#main" aria-label="Arbor, back to top">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+            <path d="M12 21V9"></path>
+            <path d="M12 12.8c0-2.5 1.8-4.2 4.4-4.2"></path>
+            <path d="M12 15.6c0-2.1-1.6-3.7-4.1-3.7"></path>
+            <circle cx="17.4" cy="7.6" r="1.5" fill="currentColor" stroke="none"></circle>
+            <circle cx="6.9" cy="10.9" r="1.5" fill="currentColor" stroke="none"></circle>
+            <circle cx="12" cy="21" r="1.5" fill="currentColor" stroke="none"></circle>
+          </svg>
+          <span class="brand-name">arbor</span>
+        </a>
+        <p class="foot-line">A living map of your data.</p>
+        <a class="btn btn-primary" href="#setup">Connect a warehouse</a>
+      </div>
+
+      <nav class="foot-cols" aria-label="Footer">
+        <div class="foot-col">
+          <p class="foot-head">Product</p>
+          <a href="#lineage">Lineage</a>
+          <a href="#board">Owners</a>
+          <a href="#spend">Spend</a>
+          <a href="#router">Router</a>
+        </div>
+        <div class="foot-col">
+          <p class="foot-head">Setup</p>
+          <a href="#setup">Install</a>
+          <a href="#ask">Ask the map</a>
+          <a href="#permissions">Permissions</a>
+        </div>
+      </nav>
+    </div>
+
+    <div class="foot-word" aria-hidden="true">arbor</div>
+
+    <div class="foot-bottom">
+      <p>A design concept. The workspace is sample data.</p>
+      <p>Built as a study, 2026.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="scripts/app.js" defer></script>
+</body>
+</html>

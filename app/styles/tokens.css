@@ -1,0 +1,66 @@
+:root {
+  /* Space scale */
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px; --space-5xl: 200px;
+
+  /* Type scale */
+  --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.125rem; --text-xl: 1.375rem;
+  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem);
+  --text-display: clamp(2.5rem, 1.2rem + 3.6vw, 4.5rem);
+  --text-section: clamp(2rem, 1rem + 2.4vw, 3.5rem);
+  --text-statement: clamp(2.25rem, 1.1rem + 3vw, 3.9rem);
+  --text-title: clamp(1.125rem, 0.4vw + 1rem, 1.375rem);
+  --text-h3: 1.0625rem;
+  --text-lead: clamp(1.0625rem, 0.3vw + 1rem, 1.3125rem);
+  --text-mark: clamp(5rem, 17vw, 19rem);
+
+  --leading-display: 0.99; --leading-tight: 1.12; --leading-body: 1.62;
+  --tracking-display: -0.035em; --tracking-body: -0.011em; --tracking-none: 0;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms; --dur-draw: 900ms;
+
+  /* Colour, measured: ink on paper 14.2:1, accent-ink on paper 5.4:1, on-accent on accent 5.2:1 */
+  --color-paper: #F2EDE7;        /* oklch(94.8% 0.0097 72.7) */
+  --color-paper-2: #FCF9F5;      /* oklch(98.3% 0.0062 75.4) */
+  --color-paper-3: #E8DFD6;      /* oklch(90.8% 0.0157 67.6) */
+  --color-ink: #3B1017;          /* oklch(24.7% 0.0679 13.8) */
+  --color-ink-2: #6B474A;        /* oklch(43.9% 0.0497 13.8) */
+  --color-muted: #7D5A57;        /* oklch(50.3% 0.0468 24.4) */
+  --color-rule: #D9CDC3;         /* oklch(85.5% 0.0192 62.4) */
+  --color-accent: #F1531F;       /* oklch(65.2% 0.2029 36.9) */
+  --color-accent-ink: #B2310B;   /* oklch(50.8% 0.1712 35.1) */
+  --color-accent-soft: #FADACD;  /* oklch(91.1% 0.0399 43.4) */
+  --color-on-accent: #2B0A0E;
+  --color-dark: #1A0A0C;         /* oklch(17.0% 0.0283 12.5) */
+  --color-dark-2: #2A1114;       /* oklch(21.6% 0.0416 13.6) */
+  --color-on-dark: #F0E7E0;      /* oklch(93.3% 0.0136 60.6) */
+  --color-on-dark-muted: #B49C97;/* oklch(71.3% 0.0295 31.7) */
+  --color-focus: #B2310B;
+  --color-focus-dark: #F1531F;
+  --color-error: #B2310B;
+  --color-success: #4C6B3F;
+  --color-ok: #9BB48A;
+
+  /* Faces */
+  --font-display: var(--font-instrument-sans), "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-outlier: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Surfaces */
+  --radius-card: 28px; --radius-m: 16px; --radius-s: 10px; --radius-pill: 999px;
+  --rule-hair: 1px;
+  --shadow-card: 0 1px 0 color-mix(in oklab, var(--color-ink) 6%, transparent),
+                 0 30px 60px -36px color-mix(in oklab, var(--color-ink) 45%, transparent);
+  --shadow-lift: 0 2px 0 color-mix(in oklab, var(--color-ink) 8%, transparent),
+                 0 44px 80px -40px color-mix(in oklab, var(--color-ink) 55%, transparent);
+
+  /* Frame */
+  --container: 1400px; --gutter: 64px; --gap-columns: 32px;
+  --section-gap-s: 104px; --section-gap: clamp(104px, 9vw, 160px); --section-gap-l: 176px;
+  --nav-h: 72px; --banner-h: 40px; --head-h: 112px;
+
+  /* Layers */
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+}
